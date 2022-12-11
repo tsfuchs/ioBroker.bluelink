@@ -186,6 +186,7 @@ class Bluelink extends utils.Adapter {
                 password: this.config.client_secret,
                 pin: this.config.client_secret_pin,
                 brand: this.config.brand,
+                language: 'de',
                 region: 'EU', //set over GUI next time
             };
 

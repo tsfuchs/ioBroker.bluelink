@@ -94,18 +94,37 @@ class Bluelink extends utils.Adapter {
                 case 'start':
                     this.log.info('Starting clima for vehicle');
 
-                    let airCtrl = await this.getStateAsync(`${vin}.control.set.airCtrl`);                
-                    let airTemp = await this.getStateAsync(`${vin}.control.set.airTemp`);
-                    let defrost = await this.getStateAsync(`${vin}.control.set.defrost`);
-                    let heating = await this.getStateAsync(`${vin}.control.set.heating`);
+                    // target temp in Celsius
+                    let airTemp = await this.getStateAsync(`${vin}.control.set.airTemp`); 
+                    // defrost windshield on/off
+                    let defrost = await this.getStateAsync(`${vin}.control.set.defrost`); 
+                    // steering wheel warmer on/off
+                    let steeringWheel = await this.getStateAsync(`${vin}.control.set.steeringWheel`); 
+                    // defrost side mirrors/rear window on/off
+                    let sideMirrorsRearWindow = await this.getStateAsync(`${vin}.control.set.sideMirrorsRearWindow`); 
+
+                    // side mirrors/rear window => 2
+                    // steering wheel warmer => 3
+                    // side mirrors/rear windows + steering wheel warmer => 4
+                    let windscreenHeating =
+                      steeringWheel.val && sideMirrorsRearWindow.val
+                        ? 4
+                        : steeringWheel.val
+                        ? 3
+                        : sideMirrorsRearWindow.val
+                        ? 2
+                        : 0;
+
+                        this.log.info(
+                          "windscreenHeating value: " + windscreenHeating
+                        );
                   
                     try {
                         response = await vehicle.start({
-                            airCtrl: airCtrl.val,
-                            igniOnDuration: 10,
-                            airTempvalue: airTemp.val,
                             defrost: defrost.val,
-                            heating: heating.val,
+                            windscreenHeating: false,//windscreenHeating, 
+                            temperature: airTemp.val, 
+                            unit: 'C'
                         });
                     } catch (err) {
                         this.log.error(JSON.stringify(err));                    
@@ -613,10 +632,11 @@ class Bluelink extends utils.Adapter {
             native: {},
         });
 
-        await this.setObjectNotExistsAsync(vin + '.control.set.heating', {
+
+        await this.setObjectNotExistsAsync(vin + '.control.set.steeringWheel', {
             type: 'state',
             common: {
-                name: 'set heating function for clima',
+                name: 'set steering wheel warmer for clima',
                 type: 'boolean',
                 role: 'state',
                 read: true,
@@ -626,10 +646,10 @@ class Bluelink extends utils.Adapter {
             native: {},
         });
 
-        await this.setObjectNotExistsAsync(vin + '.control.set.airCtrl', {
+        await this.setObjectNotExistsAsync(vin + '.control.set.sideMirrorsRearWindow', {
             type: 'state',
             common: {
-                name: 'set airCtrl function for clima',
+                name: 'set side mirrors/rear windo for clima',
                 type: 'boolean',
                 role: 'state',
                 read: true,
@@ -638,7 +658,7 @@ class Bluelink extends utils.Adapter {
             },
             native: {},
         });
-        
+
         await this.setObjectNotExistsAsync(vin + '.control.stop', {
             type: 'state',
             common: {

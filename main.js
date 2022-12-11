@@ -101,12 +101,12 @@ class Bluelink extends utils.Adapter {
                     // steering wheel warmer on/off
                     let steeringWheel = await this.getStateAsync(`${vin}.control.set.steeringWheel`); 
                     // defrost side mirrors/rear window on/off
-                    let sideMirrorsRearWindow = await this.getStateAsync(`${vin}.control.set.sideMirrorsRearWindow`); 
+                    let sideMirrorsRearWindow = await this.getStateAsync(`${vin}.control.set.sideMirrorsRearWindow`);
 
                     // side mirrors/rear window => 2
                     // steering wheel warmer => 3
                     // side mirrors/rear windows + steering wheel warmer => 4
-                    let windscreenHeating =
+                    let heatingFeatures =
                       steeringWheel.val && sideMirrorsRearWindow.val
                         ? 4
                         : steeringWheel.val
@@ -116,13 +116,13 @@ class Bluelink extends utils.Adapter {
                         : 0;
 
                         this.log.info(
-                          "windscreenHeating value: " + windscreenHeating
+                          "heatingFeatures value: " + heatingFeatures
                         );
                   
                     try {
                         response = await vehicle.start({
                             defrost: defrost.val,
-                            windscreenHeating: false,//windscreenHeating, 
+                            heatingFeatures: heatingFeatures, 
                             temperature: airTemp.val, 
                             unit: 'C'
                         });

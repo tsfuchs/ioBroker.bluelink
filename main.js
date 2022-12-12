@@ -650,7 +650,7 @@ class Bluelink extends utils.Adapter {
         await this.setObjectNotExistsAsync(vin + '.control.set.sideMirrorsRearWindow', {
             type: 'state',
             common: {
-                name: 'set side mirrors/rear windo for clima',
+                name: 'set side mirrors/rear window for clima',
                 type: 'boolean',
                 role: 'state',
                 read: true,
@@ -814,7 +814,7 @@ class Bluelink extends utils.Adapter {
         await this.setObjectNotExistsAsync(vin + '.vehicleStatus.airTemp', {
             type: 'state',
             common: {
-                name: 'Vehicle air tempereature',
+                name: 'Vehicle air temperature',
                 type: 'number',
                 role: 'indicator',
                 read: true,
@@ -850,7 +850,7 @@ class Bluelink extends utils.Adapter {
         await this.setObjectNotExistsAsync(vin + '.vehicleStatus.breakOilStatus', {
             type: 'state',
             common: {
-                name: 'Breal oil status',
+                name: 'Break oil status',
                 type: 'boolean',
                 role: 'indicator',
                 read: true,
